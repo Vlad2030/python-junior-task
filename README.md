@@ -17,6 +17,9 @@ Python3.Х, FastAPI, SQLite (можно использовать свою fakedb
 ```
 {
   // нужно спроектировать
+  "name": "boy",
+  "age": 7,
+  "type": "dog"
 }
 ```
 
