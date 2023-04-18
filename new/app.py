@@ -33,15 +33,7 @@ async def startup_event() -> None:
     app.state.logger = logger
 
 
-@app.exception_handler(RequestValidationError)
-@app.exception_handler(Exception)
-async def exception_handler(request: Request, exc: Exception) -> JSONResponse:
-    logger = request.app.state.logger
-    logger.error(f"{exc}")
-    return error_response(errors=str(exc), status_code=status.HTTP_400_BAD_REQUEST)
-
-
-app.include_router(router=router, prefix="/posts")
+app.include_router(router, prefix="/posts")
 
 
 @app.get(path="/", status_code=status.HTTP_200_OK)
