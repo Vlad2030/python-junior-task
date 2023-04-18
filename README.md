@@ -14,7 +14,7 @@ Python3.Х, FastAPI, SQLite (можно использовать свою fakedb
 Создать питомца 
 
 ##### *request body*
-```
+```json
 {
   // нужно спроектировать
   "name": "boy",
@@ -24,7 +24,7 @@ Python3.Х, FastAPI, SQLite (можно использовать свою fakedb
 ```
 
 ##### *response body*
-```
+```json
 {
   "id": 1,
   "name": "boy",
@@ -41,7 +41,7 @@ Python3.Х, FastAPI, SQLite (можно использовать свою fakedb
   limit: integer (optional, default=20)
 
 ##### *response body*
-```
+```json
 {
   "count": 2,
   "items": [
@@ -68,7 +68,7 @@ Python3.Х, FastAPI, SQLite (можно использовать свою fakedb
 Удалить питомцев
 
 ##### *request body*
-```
+```json
 {
   "ids": [
     1,
@@ -79,7 +79,7 @@ Python3.Х, FastAPI, SQLite (можно использовать свою fakedb
 ```
 
 ##### *response body*
-```
+```json
 {
   "deleted": 2,
   "errors": [
