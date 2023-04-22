@@ -1,50 +1,45 @@
-from api.api import router
-from core.logger import setup_logger
-from core.middleware import setup as setup_middleware
-from core.settings import fastapi_settings, swagger_settings
-from fastapi import FastAPI
-from fastapi import Response
-from loguru import logger
-from schemas import ApplicationResponse
+import logging
+
+from fastapi import FastAPI, Response
+from fastapi.exceptions import RequestValidationError
 from starlette import status
+from starlette.responses import JSONResponse
+
+from config.settings import get_settings
+from core.logger import setup_logger
+from core.middleware.cors import setup_cors_middleware
+from routers.api_routes import router
+from schemas import ApplicationResponse
+
+settings = get_settings()
+
+app = FastAPI(
+    title=settings.api_config.title,
+    description=settings.api_config.description,
+    debug=settings.api_config.debug,
+    version=settings.api_config.version,
+    docs_url=settings.api_config.docs_url,
+)
+setup_cors_middleware(app=app)
+
+'''
+@app.on_event("startup")
+async def startup_event() -> None:
+    # setup logger
+    logger = logging.getLogger("uvicorn.access")
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+    logger.addHandler(handler)
+    app.state.logger = logger
+'''
+app.include_router(router, prefix="/posts")
+
+@app.get(path="/", status_code=status.HTTP_200_OK)
+async def healthcheck() -> Response:
+    return {
+        "ok": True,
+        "result": True,
+    }
 
 
-
-def create_application() -> FastAPI:
-    """
-    Setup FastAPI application: middleware, exception handlers, jwt, logger.
-    """
-
-    application = FastAPI(
-        title="test_task",
-        description="API for test-task.",
-        version="0.0.1",
-        debug=fastapi_settings.DEBUG,
-        docs_url=swagger_settings.DOCS_URL,
-        redoc_url=swagger_settings.REDOC_URL,
-        openapi_url=swagger_settings.OPENAPI_URL,
-    )
-    application.include_router(router)
-
-    setup_middleware(application)
-    setup_logger()
-
-    @application.on_event("startup")
-    async def startup() -> None:
-        logger.info("Application startup")
-
-    @application.on_event("shutdown")
-    async def shutdown() -> None:
-        logger.warning("Application shutdown")
-
-    @application.get(path="/", status_code=status.HTTP_200_OK)
-    async def healthcheck() -> Response:
-        return {
-            "ok": True,
-            "result": True,
-        }
-
-    return application
-
-
-app = create_application()
+#app = create_application()
