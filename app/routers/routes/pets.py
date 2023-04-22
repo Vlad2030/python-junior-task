@@ -2,9 +2,10 @@ from typing import Dict, List, Union
 
 from fastapi import APIRouter
 from starlette.exceptions import HTTPException
-from schemas.models import Pets
-from schemas.requests import Pets
-from schemas.responses import Pets
+from schemas import models
+from schemas import orm
+from schemas import requests
+from schemas import responses
 from starlette import status
 from starlette.responses import JSONResponse
 
