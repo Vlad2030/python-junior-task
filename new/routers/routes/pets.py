@@ -14,7 +14,7 @@ router = APIRouter()
     status_code=status.HTTP_201_CREATED,
     summary="",
     description="",
-    )
+)
 async def pet_create(
         name: str,
         age: int,

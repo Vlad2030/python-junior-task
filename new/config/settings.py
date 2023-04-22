@@ -61,8 +61,8 @@ class Settings(BaseSettings):
 
 
 def load_from_yaml() -> Any:
-    with open("appsettings.yaml") as fp:
-        config = yaml.safe_load(fp)
+    with open("appsettings.yaml") as file:
+        config = yaml.safe_load(file)
     return config
 
 

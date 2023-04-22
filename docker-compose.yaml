@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  backend:
+    build: /app
+    command: python3 main.py
+    ports:
+      - 3000:3000
+
+  database:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=
+      - POSTGRES_PASSWORD=
+      - POSTGRES_SERVER=
+      - POSTGRES_DB=
+    ports:
+      - 1234:1234
+    depends_on:
+      - backend

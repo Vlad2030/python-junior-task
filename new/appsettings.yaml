@@ -1,14 +1,14 @@
 # server environment configuration
 uvicorn:
   host: 0.0.0.0
-  port: 8000
+  port: 80
   log_level: info
-  reload: false
+  reload: true
 db_connection:
-  postgres_user: ${PostgresUser}
-  postgres_password: ${PostgresPassword}
-  postgres_server: ${PostgresServer}
-  postgres_database: ${PosgresDatabase}
+  postgres_user: ${POSTGRES_USER}
+  postgres_password: ${POSTGRES_PASSWORD}
+  postgres_server: ${POSTGRES_SERVER}
+  postgres_database: ${POSTGRES_DB}
 api_config:
   title: test_task
   description: API Documentation for test_task
