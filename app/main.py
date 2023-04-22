@@ -1,17 +1,16 @@
 import uvicorn
-from loguru import logger
-
 from config.settings import get_settings
-
-settings = get_settings()
+from loguru import logger
 
 
 def main() -> None:
-#    logger.info(
-#        f"Starting application. Uvicorn running on http(s):"
-#        f"//{settings.uvicorn.host}:{settings.uvicorn.port} "
-#    )
-    #logger.info(f"Custom logging on: {logging_settings.CUSTOM_LOGGING_ON}")
+    settings = get_settings()
+
+    logger.info(
+        f"Starting application. Uvicorn running on http(s):"
+        f"//{settings.uvicorn.host}:{settings.uvicorn.port} "
+    )
+    logger.info(f"Custom logging on: {settings.logging.custom_log_level}")
     uvicorn.run(
         app="app:app",
         host=settings.uvicorn.host,

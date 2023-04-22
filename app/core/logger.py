@@ -2,9 +2,8 @@ import logging
 import sys
 from typing import Any, Dict
 
-from loguru import logger
-
 from config.settings import get_settings
+from loguru import logger
 
 settings = get_settings()
 logger.remove()

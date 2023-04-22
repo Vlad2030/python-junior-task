@@ -20,7 +20,7 @@ class UvicornSettings(BaseSettings):
     """Settings for uvicorn server"""
 
     host: str
-    port: int = Field(ge=0, le=65535)
+    port: int
     log_level: LogLevels
     reload: bool
 
@@ -50,7 +50,7 @@ class DatabaseConnectionSettings(BaseSettings):
     postgres_password:  str
     postgres_database:  str
     postgres_server:    str
-    postgres_port:      int
+    postgres_port:      str
 
     @property
     def postgres_uri(self) -> str:

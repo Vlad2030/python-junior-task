@@ -1,13 +1,12 @@
 from typing import Dict, List, Union
 
 from fastapi import APIRouter
-from fastapi.exceptions import HTTPException
-from starlette import status
-from starlette.responses import JSONResponse
-
+from starlette.exceptions import HTTPException
 from schemas.models import Pets
 from schemas.requests import Pets
 from schemas.responses import Pets
+from starlette import status
+from starlette.responses import JSONResponse
 
 router = APIRouter()
 
@@ -16,6 +15,7 @@ router = APIRouter()
     status_code=status.HTTP_201_CREATED,
     summary="",
     description="",
+    response_model=None,
 )
 async def pet_create(
         name: str,
@@ -43,6 +43,7 @@ async def pet_create(
 @router.get(
     path="/",
     status_code=status.HTTP_200_OK,
+    response_model=None
 )
 async def pets_list(limit: int = 20) -> JSONResponse:
     ...
@@ -56,6 +57,7 @@ async def pets_list(limit: int = 20) -> JSONResponse:
 @router.delete(
     path="/",
     status_code=status.HTTP_200_OK,
+    response_model=None
 )
 async def pets_delete(ids: List[int]) -> JSONResponse:
     ...
