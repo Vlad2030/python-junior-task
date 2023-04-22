@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, Response
 from fastapi.exceptions import RequestValidationError
 from starlette import status
 from starlette.responses import JSONResponse
@@ -8,7 +8,7 @@ from starlette.responses import JSONResponse
 from config.settings import get_settings
 from core.logger import setup_logger
 from core.middleware.cors import setup_cors_middleware
-from new.routers.api_routes import router
+from routers.api_routes import router
 from schemas import ApplicationResponse
 
 settings = get_settings()
@@ -22,7 +22,7 @@ app = FastAPI(
 )
 setup_cors_middleware(app=app)
 
-
+'''
 @app.on_event("startup")
 async def startup_event() -> None:
     # setup logger
@@ -31,10 +31,8 @@ async def startup_event() -> None:
     handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
     logger.addHandler(handler)
     app.state.logger = logger
-
-
+'''
 app.include_router(router, prefix="/posts")
-
 
 @app.get(path="/", status_code=status.HTTP_200_OK)
 async def healthcheck() -> Response:
@@ -44,4 +42,4 @@ async def healthcheck() -> Response:
     }
 
 
-app = create_application()
+#app = create_application()

@@ -1,9 +1,9 @@
 # server environment configuration
 uvicorn:
   host: 0.0.0.0
-  port: 80
+  port: 8080
   log_level: info
-  reload: true
+  reload: false
 db_connection:
   postgres_user: ${POSTGRES_USER}
   postgres_password: ${POSTGRES_PASSWORD}
@@ -15,3 +15,7 @@ api_config:
   debug: true
   version: v1
   docs_url: /docs
+logging:
+  custom_log_level: false
+  log_level: info
+  file_path: logs

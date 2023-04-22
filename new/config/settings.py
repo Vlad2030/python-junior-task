@@ -35,6 +35,14 @@ class ApiConfigSettings(BaseSettings):
     debug: bool
 
 
+class LoggingConfigSettings(BaseSettings):
+    """Settings for loguru"""
+
+    custom_log_level: bool
+    log_level: str = ""
+    file_path: str = ""
+
+
 class DatabaseConnectionSettings(BaseSettings):
     """Settings for database connection"""
 
@@ -58,6 +66,7 @@ class Settings(BaseSettings):
     uvicorn: UvicornSettings
     db_connection: DatabaseConnectionSettings
     api_config: ApiConfigSettings
+    logging: LoggingConfigSettings
 
 
 def load_from_yaml() -> Any:

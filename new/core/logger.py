@@ -4,8 +4,9 @@ from typing import Any, Dict
 
 from loguru import logger
 
-from core.settings import logging_settings
+from config.settings import get_settings
 
+settings = get_settings()
 logger.remove()
 
 
@@ -69,7 +70,7 @@ def json_filter(record: Dict[str, Any], **kwargs: Any) -> bool:
 
 
 def setup_logger() -> None:
-    if logging_settings.CUSTOM_LOGGING_ON:
+    if settings.logging.custom_log_level:
         _setup_logger()
 
 
@@ -80,7 +81,7 @@ def _setup_logger() -> None:
 
     # intercept everything at the root logger
     logging.root.handlers = [InterceptHandler()]
-    logging.root.setLevel(logging_settings.LOGGING_LEVEL)
+    logging.root.setLevel(settings.logging.log_level)
 
     # remove every other logger's handlers
     # and propagate to root logger
@@ -90,9 +91,9 @@ def _setup_logger() -> None:
 
     # set json handler
     logger.add(
-        sink=logging_settings.LOGGING_FILE_PATH,
+        sink=settings.logging.file_path,
         format=json_formatter,
-        level=logging_settings.LOGGING_LEVEL,
+        level=settings.logging.log_level,
         serialize=True,
         encoding="utf-8",
         catch=False,
@@ -106,7 +107,7 @@ def _setup_logger() -> None:
         sink=sys.stdout,
         diagnose=True,
         colorize=True,
-        level=logging_settings.LOGGING_LEVEL,
+        level=settings.logging.log_level,
         format=stdout_fomatter,
         catch=False,
         backtrace=True,
