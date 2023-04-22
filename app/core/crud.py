@@ -16,7 +16,7 @@ class Pet:
         self.database.add(database_pet)
         self.database.commit()
         self.database.refresh(database_pet)
-        return self.database_post
+        return database_pet
 
 
     def get_all(self):
