@@ -2,8 +2,8 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from schemas.orm import Posts
 from schemas.models import DeletePostResponse, Post, UpdatePost
+from schemas.orm import Posts
 
 
 class Pet:

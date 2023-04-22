@@ -5,7 +5,9 @@ from fastapi.exceptions import HTTPException
 from starlette import status
 from starlette.responses import JSONResponse
 
+from schemas.models import Pets
 from schemas.requests import Pets
+from schemas.responses import Pets
 
 router = APIRouter()
 

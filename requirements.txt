@@ -7,3 +7,4 @@ orjson==3.8.8
 sqlalchemy-orm==1.2.4
 PyYAML==6.0
 loguru==0.6.0
+databases==0.6.2

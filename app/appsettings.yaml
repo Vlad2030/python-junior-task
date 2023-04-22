@@ -9,6 +9,7 @@ db_connection:
   postgres_password: ${POSTGRES_PASSWORD}
   postgres_server: ${POSTGRES_SERVER}
   postgres_database: ${POSTGRES_DB}
+  postgres_port: ${POSTGRES_PORT}
 api_config:
   title: test_task
   description: API Documentation for test_task
