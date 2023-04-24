@@ -22,7 +22,7 @@ def create_application() -> FastAPI:
     )
     application.debug = settings.api_config.debug
     setup_cors_middleware(app=application)
-    application.include_router(router, prefix="/posts")
+    application.include_router(router, prefix="/pets")
 
     @application.on_event("startup")
     async def startup() -> None:

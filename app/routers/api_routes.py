@@ -5,7 +5,7 @@ from routers.routes import pets
 
 def create_api_router() -> APIRouter:
     api_router = APIRouter()
-    api_router.include_router(pets.router, tags=["pets"], prefix="/pets")
+    api_router.include_router(pets.router, tags=["pets"])
 
     return api_router
 
