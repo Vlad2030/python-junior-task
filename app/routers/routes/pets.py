@@ -1,7 +1,7 @@
 from typing import Dict, List, Union
 
 from fastapi import APIRouter
-from starlette import status
+from starlette.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_404_NOT_FOUND
 from starlette.exceptions import HTTPException
 from starlette.responses import JSONResponse
 
@@ -15,15 +15,21 @@ router = APIRouter()
 
 
 def check_pet_type(type: PetsTypeModel) -> bool:
+    """### Check Pet Type
+
+    Returns `True` if type matches.
+
+    Else returns `False`.
+    """
     allowed_types: PetsType = PetsTypeModel.type_list
     return True if type in allowed_types else False
 
 
 @router.post(
     path="/",
-    status_code=status.HTTP_201_CREATED,
-    summary="",
-    description="",
+    status_code=HTTP_201_CREATED,
+    summary="Create a pet",
+    description="Creating a pet ¯\_(ツ)_/¯",
     response_model=PetsPostResponse,
 )
 async def pet_create(
@@ -33,7 +39,7 @@ async def pet_create(
 ) -> PetsPostResponse:
     if not check_pet_type(type=type):
         raise HTTPException(
-            status_code=404,
+            status_code=HTTP_404_NOT_FOUND,
             detail="Type doesn't exists",
         )
     
@@ -49,7 +55,7 @@ async def pet_create(
 
 @router.get(
     path="/",
-    status_code=status.HTTP_200_OK,
+    status_code=HTTP_200_OK,
     summary="",
     description="",
     response_model=PetsGetResponse
@@ -65,7 +71,7 @@ async def pets_list(limit: PetsLimit = 20) -> JSONResponse:
 
 @router.delete(
     path="/",
-    status_code=status.HTTP_200_OK,
+    status_code=HTTP_200_OK,
     summary="",
     description="",
     response_model=PetsDeleteResponse
