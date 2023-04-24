@@ -5,7 +5,7 @@
 Python3.Х, FastAPI, SQLite (можно использовать свою fakedb на базе словаря или
 класса) и Docker.
 
-##### *P.S. Решил вместо SQlite использовать PostgreSQL + SQLALchemy + ormar, вместо обычного Docker, Docker-compose. Также в планах сделать автотесты (pytest) и миграции (alembic)*
+##### *P.S. Решил вместо SQlite использовать PostgreSQL + SQLALchemy, вместо обычного Docker, Docker-compose. Также в планах сделать автотесты (pytest) и миграции (alembic)*
 
 Результат задания нужно залить на публичный git.
 
