@@ -1,13 +1,14 @@
-from config.settings import get_settings
-from core.logger import setup_logger
-from core.middleware.cors import setup_cors_middleware
 from fastapi import FastAPI, Response
 from fastapi.exceptions import RequestValidationError
 from loguru import logger
-from routers.api_routes import router
-from schemas import ApplicationResponse
 from starlette import status
 from starlette.responses import JSONResponse
+
+from config.settings import get_settings
+from core.logger import setup_logger
+from core.middleware.cors import setup_cors_middleware
+from routers.api_routes import router
+from schemas import ApplicationResponse
 
 
 def create_application() -> FastAPI:

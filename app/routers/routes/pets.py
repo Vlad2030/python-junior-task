@@ -1,36 +1,42 @@
 from typing import Dict, List, Union
 
 from fastapi import APIRouter
-from starlette.exceptions import HTTPException
-from schemas import models
-from schemas import orm
-from schemas import requests
-from schemas import responses
 from starlette import status
+from starlette.exceptions import HTTPException
 from starlette.responses import JSONResponse
 
+from app.orm import pets
+from schemas.models import PetsTypeModel
+from schemas.requests import PetsAge, PetsIds, PetsLimit, PetsName, PetsType
+from schemas.responses import (PetsDeleteListResponce, PetsDeleteResponse,
+                               PetsGetResponse, PetsPostResponse)
+
 router = APIRouter()
+
+
+def check_pet_type(type: PetsTypeModel) -> bool:
+    allowed_types: PetsType = PetsTypeModel.type_list
+    return True if type in allowed_types else False
+
 
 @router.post(
     path="/",
     status_code=status.HTTP_201_CREATED,
     summary="",
     description="",
-    response_model=None,
+    response_model=PetsPostResponse,
 )
 async def pet_create(
-        name: str,
-        age: int,
-        type: str,
-) -> JSONResponse:
-    if type not in Pets.types:
+        name: PetsName,
+        age: PetsAge,
+        type: PetsType,
+) -> PetsPostResponse:
+    if not check_pet_type(type=type):
         raise HTTPException(
             status_code=404,
             detail="Type doesn't exists",
         )
-
-
-
+    
     return {
         "id": ...,
         "name": name,
@@ -44,9 +50,11 @@ async def pet_create(
 @router.get(
     path="/",
     status_code=status.HTTP_200_OK,
-    response_model=None
+    summary="",
+    description="",
+    response_model=PetsGetResponse
 )
-async def pets_list(limit: int = 20) -> JSONResponse:
+async def pets_list(limit: PetsLimit = 20) -> JSONResponse:
     ...
 
     return {
@@ -58,9 +66,11 @@ async def pets_list(limit: int = 20) -> JSONResponse:
 @router.delete(
     path="/",
     status_code=status.HTTP_200_OK,
-    response_model=None
+    summary="",
+    description="",
+    response_model=PetsDeleteResponse
 )
-async def pets_delete(ids: List[int]) -> JSONResponse:
+async def pets_delete(ids: PetsIds) -> JSONResponse:
     ...
     errors: Dict[str, None] = []
 
