@@ -1,11 +1,11 @@
 from typing import Dict, List, Union
 
 from fastapi import APIRouter
-from starlette.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_404_NOT_FOUND
 from starlette.exceptions import HTTPException
 from starlette.responses import JSONResponse
+from starlette.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_404_NOT_FOUND
 
-from app.orm import pets
+from orm import pets
 from schemas.models import PetsTypeModel
 from schemas.requests import PetsAge, PetsIds, PetsLimit, PetsName, PetsType
 from schemas.responses import (PetsDeleteListResponce, PetsDeleteResponse,

@@ -20,7 +20,7 @@ class PetsGetResponse(Model):
 
 class PetsDeleteListResponce(Model):
     id: int = Integer()
-    error: str = String()
+    error: str = String(max_length=100)
 
 
 class PetsDeleteResponse(Model):

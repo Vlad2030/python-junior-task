@@ -14,7 +14,7 @@ db_connection:
 api_config:
   title: test_task
   description: API Documentation for test_task
-  debug: true
+  debug: False
   version: v1
   docs_url: /docs
 
