@@ -1,9 +1,9 @@
 from uuid import UUID
 
+from schemas.models import DeletePostResponse, Post, UpdatePost
 from sqlalchemy.orm import Session
 
 from app.orm.pets import Posts
-from schemas.models import DeletePostResponse, Post, UpdatePost
 
 
 class Pet:
@@ -18,21 +18,17 @@ class Pet:
         self.database.refresh(database_pet)
         return database_pet
 
-
     def get_all(self):
         return self.database.query(Posts).all()
 
-
     def get_one(self, id: UUID):
         return self.database.query(Posts).filter_by(id=id).one()
-
 
     def update(self, post: UpdatePost):
         update_query = {Posts.title: post.title, Posts.description: post.description}
         self.database.query(Posts).filter_by(id=post.id).update(update_query)
         self.database.commit()
         return self.database.query(Posts).filter_by(id=post.id).one()
-
 
     def delete(self, id: UUID):
         post = self.database.query(Posts).filter_by(id=id).all()

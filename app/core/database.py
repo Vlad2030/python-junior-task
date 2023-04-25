@@ -1,8 +1,7 @@
+from config.settings import get_settings
 from databases import Database
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.engine import Engine
-
-from config.settings import get_settings
 
 
 class Database:

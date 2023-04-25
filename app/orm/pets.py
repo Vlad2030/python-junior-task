@@ -9,7 +9,7 @@ class Pet(Base):
     __tablename__ = "pets"
 
     count = Column(Integer)
-    #items = Enum
+    # items = Enum
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     age = Column(Integer)

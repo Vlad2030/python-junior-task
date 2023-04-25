@@ -46,11 +46,11 @@ class LoggingConfigSettings(BaseSettings):
 class DatabaseConnectionSettings(BaseSettings):
     """Settings for database connection"""
 
-    postgres_user:      str
-    postgres_password:  str
-    postgres_database:  str
-    postgres_server:    str
-    postgres_port:      str
+    postgres_user: str
+    postgres_password: str
+    postgres_database: str
+    postgres_server: str
+    postgres_port: str
 
     @property
     def postgres_uri(self) -> str:

@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import List
 
 from ormar import Boolean, DateTime, Integer, Model, String
-
+from pydantic import BaseModel
 from schemas.models import PetsTypeModel
 
 
@@ -33,5 +33,5 @@ class PetsDeleteResponse(Model):
     errors: List[PetsDeleteListResponce]
 
 
-class HeathStatusCheckResonce(Model):
+class HeathStatusCheckResonce(BaseModel):
     ok: bool = Boolean()
