@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
 
-from ormar import DateTime, Integer, Model, String, Boolean
+from ormar import Boolean, DateTime, Integer, Model, String
 
 from schemas.models import PetsTypeModel
 
