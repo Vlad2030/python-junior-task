@@ -11,17 +11,21 @@ class PetsAge(BaseModel):
     age: int
 
 
+class AllowedPetsTypes(BaseModel):
+    cat: str = "cat"
+    dog: str = "dog"
+
+
 class PetsType(BaseModel):
-    cat: str
-    dog: str
+    type: str
 
 
 class PetsLimit(BaseModel):
-    limit: int
+    limit: List[int]
 
 
 class PetsIds(BaseModel):
-    ids: Union[int, List[int]]
+    ids: List[int]
 
 
 class PetsPostRequest(BaseModel): ...

@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Dict, List, Union
 
 from fastapi import APIRouter
@@ -11,6 +12,7 @@ from schemas.requests import PetsAge, PetsIds, PetsLimit, PetsName, PetsType
 from schemas.responses import (PetsDeleteListResponce, PetsDeleteResponse,
                                PetsGetResponse, PetsPostResponse)
 
+
 router = APIRouter()
 
 
@@ -21,7 +23,7 @@ def check_pet_type(type: PetsTypeModel) -> bool:
 
     Else returns `False`.
     """
-    allowed_types: PetsType = PetsTypeModel.type_list
+    allowed_types: PetsType = ["dog", "cat"]#PetsTypeModel.type_list
     return True if type in allowed_types else False
 
 
@@ -33,22 +35,24 @@ def check_pet_type(type: PetsTypeModel) -> bool:
     response_model=PetsPostResponse,
 )
 async def pet_create(
-        name: PetsName,
-        age: PetsAge,
-        type: PetsType,
-) -> PetsPostResponse:
+        name: str,
+        age: int,
+        type: str,
+) -> JSONResponse:
     if not check_pet_type(type=type):
         raise HTTPException(
             status_code=HTTP_404_NOT_FOUND,
             detail="Type doesn't exists",
         )
+    id: int = 1
+    created_at: datetime = datetime.now()
     
     return {
-        "id": ...,
+        "id": id,
         "name": name,
         "age": age,
         "type": type,
-        "created_at": ...
+        "created_at": created_at
     }
 
 
@@ -56,24 +60,25 @@ async def pet_create(
 @router.get(
     path="/",
     status_code=HTTP_200_OK,
-    summary="",
-    description="",
+    summary="Get all pets",
+    description="Gettings all pets ( ͡° ͜ʖ ͡° )",
     response_model=PetsGetResponse
 )
-async def pets_list(limit: PetsLimit = 20) -> JSONResponse:
+async def pets_list(limit: int = 20) -> JSONResponse:
     ...
-
+    count = 1
+    items = [limit, count]
     return {
-        "count": ...,
-        "items": ...,
+        "count": count,
+        "items": items,
     }
 
 
 @router.delete(
     path="/",
     status_code=HTTP_200_OK,
-    summary="",
-    description="",
+    summary="Delete pets",
+    description="Deleting pets by ID ( •_•)",
     response_model=PetsDeleteResponse
 )
 async def pets_delete(ids: PetsIds) -> JSONResponse:

@@ -1,28 +1,37 @@
+from datetime import datetime
 from typing import List
 
-from ormar import JSON, DateTime, Integer, Model, String
+from ormar import DateTime, Integer, Model, String, Boolean
 
 from schemas.models import PetsTypeModel
 
 
 class PetsPostResponse(Model):
-    id: int = Integer()
+    id: int = Integer(minimum=1)
     name: str = String(max_length=50, min_length=1)
     age: int = Integer(minimum=1, maximum=99)
-    type: PetsTypeModel
-    created_at: str = DateTime()
+    type: str = String(max_length=50, min_length=1)
+    created_at: datetime = DateTime()
 
 
 class PetsGetResponse(Model):
-    count: int = Integer()
-    items: List[PetsPostResponse] = JSON(PetsPostResponse)
+    count: int = Integer(minimum=1)
+    items: List[PetsPostResponse]
+
+
+class PetsGetListResponse(Model):
+    items: PetsPostResponse
 
 
 class PetsDeleteListResponce(Model):
     id: int = Integer()
-    error: str = String(max_length=100)
+    error: str = String(max_length=150)
 
 
 class PetsDeleteResponse(Model):
     deleted: int = Integer()
-    errors: List[PetsDeleteListResponce] = JSON(PetsDeleteListResponce)
+    errors: List[PetsDeleteListResponce]
+
+
+class HeathStatusCheckResonce(Model):
+    ok: bool = Boolean()
