@@ -4,7 +4,7 @@ from typing import Dict, List, Union
 from fastapi import APIRouter
 from orm import pets
 from schemas.models import PetsTypeModel
-from schemas.requests import PetsAge, PetsIds, PetsLimit, PetsName, PetsType
+from schemas.requests import PetsIds, PetsType
 from schemas.responses import (PetsDeleteListResponce, PetsDeleteResponse,
                                PetsGetResponse, PetsPostResponse)
 from starlette.exceptions import HTTPException
