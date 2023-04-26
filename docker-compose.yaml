@@ -6,6 +6,9 @@ services:
     command: python ./main.py
     ports:
       - 3000:3000
+    depends_on:
+      - database
+
 
   database:
     image: postgres
@@ -13,9 +16,7 @@ services:
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
-      - POSTGRES_SERVER=postgres
+      - POSTGRES_SERVER=localhost
       - POSTGRES_DB=pets
     ports:
       - 5432:5432
-    depends_on:
-      - backend
