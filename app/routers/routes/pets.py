@@ -1,15 +1,25 @@
 from datetime import datetime
 from typing import Dict, List, Union
 
-from fastapi import APIRouter
-from orm import pets
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from starlette.exceptions import HTTPException
+from starlette.responses import JSONResponse
+from starlette.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_404_NOT_FOUND
+from core.database import Database
+from core.crud import Pet as PetCrud
 from schemas.models import PetsTypeModel
 from schemas.requests import PetsIds, PetsType
 from schemas.responses import (PetsDeleteListResponce, PetsDeleteResponse,
                                PetsGetResponse, PetsPostResponse)
-from starlette.exceptions import HTTPException
-from starlette.responses import JSONResponse
-from starlette.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_404_NOT_FOUND
+
+
+def get_engine() -> None:
+    database = Database()
+    engine = database.connect()
+    session = database.session_local(engine=engine)
+    return database.get()
+
 
 router = APIRouter()
 
@@ -26,18 +36,17 @@ def check_pet_type(type: PetsTypeModel) -> bool:
 
 
 @router.post(
-    path="/",
+    path="/pets",
     status_code=HTTP_201_CREATED,
     summary="Create a pet",
     description="Creating a pet ¯\_(ツ)_/¯",
     response_model=PetsPostResponse,
 )
 async def pet_create(
-        name: str,
-        age: int,
-        type: str,
+        pet: PetsPostResponse,
+        db: Session = Depends(),
 ) -> JSONResponse:
-    """/pets/ POST Pet Create func
+    """/pets POST Pet Create func
 
     Args:
         name (str): Pet name
@@ -79,28 +88,27 @@ async def pet_create(
             status_code=HTTP_404_NOT_FOUND,
             detail="Type doesn't exists",
         )
-    id: int = 1
-    created_at: datetime = datetime.now()
+    _session = Database().session_local
+    _pet = PetCrud(database=...)
     
     return {
         "id": id,
-        "name": name,
-        "age": age,
+        "name": ...,
+        "age": ...,
         "type": type,
         "created_at": created_at
     }
 
 
-
 @router.get(
-    path="/",
+    path="/pets",
     status_code=HTTP_200_OK,
     summary="Get all pets",
     description="Gettings all pets ( ͡° ͜ʖ ͡° )",
     response_model=PetsGetResponse
 )
 async def pets_list(limit: int = 20) -> JSONResponse:
-    """/pets/ GET all pets list
+    """/pets GET all pets list
 
     Args:
         limit (int, optional): Pet amount. Defaults to 20.
@@ -122,9 +130,8 @@ async def pets_list(limit: int = 20) -> JSONResponse:
             ]
         }
     """
-    ...
-    count = 1
-    items = [limit, count]
+    items: list = PetCrud(database=get_engine()).get_all()
+    count: int = len(items)
     return {
         "count": count,
         "items": items,
@@ -132,14 +139,14 @@ async def pets_list(limit: int = 20) -> JSONResponse:
 
 
 @router.delete(
-    path="/",
+    path="/pets",
     status_code=HTTP_200_OK,
     summary="Delete pets",
     description="Deleting pets by ID ( •_•)",
     response_model=PetsDeleteResponse
 )
 async def pets_delete(ids: PetsIds) -> JSONResponse:
-    """ /pets/ DELETE pets by id
+    """ /pets DELETE pets by id
 
     Args:
         ids (list): list of pets id to delete

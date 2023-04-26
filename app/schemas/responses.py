@@ -1,37 +1,41 @@
 from datetime import datetime
 from typing import List
 
-from ormar import Boolean, DateTime, Integer, Model, String
 from pydantic import BaseModel
-from schemas.models import PetsTypeModel
 
 
-class PetsPostResponse(Model):
-    id: int = Integer(minimum=1)
-    name: str = String(max_length=50, min_length=1)
-    age: int = Integer(minimum=1, maximum=99)
-    type: str = String(max_length=50, min_length=1)
-    created_at: datetime = DateTime()
+class PetsPost(BaseModel):
+    name: str
+    age: int
+    type: str
 
 
-class PetsGetResponse(Model):
-    count: int = Integer(minimum=1)
+class PetsPostResponse(PetsPost):
+    id: int
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
+
+
+class PetsGetResponse(BaseModel):
+    count: int 
     items: List[PetsPostResponse]
 
 
-class PetsGetListResponse(Model):
+class PetsGetListResponse(BaseModel):
     items: PetsPostResponse
 
 
-class PetsDeleteListResponce(Model):
-    id: int = Integer()
-    error: str = String(max_length=150)
+class PetsDeleteListResponce(BaseModel):
+    id: int
+    error: str
 
 
-class PetsDeleteResponse(Model):
-    deleted: int = Integer()
+class PetsDeleteResponse(BaseModel):
+    deleted: int
     errors: List[PetsDeleteListResponce]
 
 
-class HeathStatusCheckResonce(BaseModel):
-    ok: bool = Boolean()
+class HeathStatusCheckResponce(BaseModel):
+    ok: bool

@@ -1,13 +1,12 @@
+from fastapi import FastAPI, Response
+from loguru import logger
+from starlette import status
+
 from config.settings import get_settings
 from core.logger import setup_logger
 from core.middleware.cors import setup_cors_middleware
-from fastapi import FastAPI, Response
-from fastapi.exceptions import RequestValidationError
-from loguru import logger
 from routers.api_routes import router
-from schemas.responses import HeathStatusCheckResonce
-from starlette import status
-from starlette.responses import JSONResponse
+from schemas.responses import HeathStatusCheckResponce
 
 
 def create_application() -> FastAPI:
@@ -21,7 +20,7 @@ def create_application() -> FastAPI:
     )
     application.debug = settings.api_config.debug
     setup_cors_middleware(app=application)
-    application.include_router(router, prefix="/pets")
+    application.include_router(router)
 
     @application.on_event("startup")
     async def startup() -> None:
@@ -36,7 +35,7 @@ def create_application() -> FastAPI:
         status_code=status.HTTP_200_OK,
         summary="Check health status",
         description="Check health status (´♡‿♡`)",
-        response_model=HeathStatusCheckResonce,
+        response_model=HeathStatusCheckResponce,
     )
     async def healthcheck() -> Response:
         return {"ok": True}

@@ -1,39 +1,33 @@
-from uuid import UUID
-
-from schemas.models import DeletePostResponse, Post, UpdatePost
 from sqlalchemy.orm import Session
 
-from app.orm.pets import Posts
+from core.database import Database
+from orm.pets import Pets
+from schemas.responses import (PetsDeleteResponse, PetsGetResponse,
+                               PetsPostResponse)
 
 
 class Pet:
     def __init__(self, database: Session) -> None:
         self.database: Session = database
-        pass
 
-    def create(self, post: Post):
-        database_pet = Posts(title=post.title, description=post.description)
+    def create(self, pet: PetsPostResponse):
+        database_pet = Pets(**pet.dict())
         self.database.add(database_pet)
         self.database.commit()
         self.database.refresh(database_pet)
         return database_pet
 
-    def get_all(self):
-        return self.database.query(Posts).all()
+    def get_all(self, limit: int) -> list:
+        return self.database.query(Pets).limit(limit).all()
 
-    def get_one(self, id: UUID):
-        return self.database.query(Posts).filter_by(id=id).one()
-
-    def update(self, post: UpdatePost):
-        update_query = {Posts.title: post.title, Posts.description: post.description}
-        self.database.query(Posts).filter_by(id=post.id).update(update_query)
-        self.database.commit()
-        return self.database.query(Posts).filter_by(id=post.id).one()
-
-    def delete(self, id: UUID):
-        post = self.database.query(Posts).filter_by(id=id).all()
-        if not post:
-            return DeletePostResponse(detail="Doesnt Exist")
-        self.database.query(Posts).filter_by(id=id).delete()
+    def delete(self, ids: list):
+        deleted = 0
+        errors = []
+        for id in ids:
+            pet = self.database.query(Pets).filter(PetsPostResponse.id==id).first()
+        if not pet:
+            return errors.append({"id": id, "error": "Pet with the matching ID was not found."})
+        
+        self.database.query(Pets).filter_by(id=id).delete()
         self.database.commit()
         return DeletePostResponse(detail="Post Deleted")

@@ -5,11 +5,11 @@ uvicorn:
   reload: false
 
 db_connection:
-  postgres_user: ${POSTGRES_USER}
-  postgres_password: ${POSTGRES_PASSWORD}
-  postgres_server: ${POSTGRES_SERVER}
-  postgres_database: ${POSTGRES_DB}
-  postgres_port: ${POSTGRES_PORT}
+  postgres_user: admin
+  postgres_password: admin
+  postgres_server: postgres
+  postgres_database: pets
+  postgres_port: 5432
 
 api_config:
   title: test_task

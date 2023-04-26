@@ -1,5 +1,5 @@
-FROM python3:slim
+FROM python:latest
+COPY . /web-api/
 WORKDIR /web-api
 ENV PYTHONDONTWRITEBYTECODE 1
-COPY . /web-api/
-RUN pip3 install -r requirements.txt
+RUN pip install -r requirements.txt

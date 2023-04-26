@@ -77,6 +77,17 @@ def load_from_yaml() -> Any:
     return config
 
 
+def db_link(
+        user: str,
+        password: str,
+        database: str,
+        server: str,
+        port: int,
+) -> str:
+    link = f"postgresql://{user}:{password}@{server}:{port}/{database}"
+    return link
+
+
 @lru_cache()
 def get_settings() -> Settings:
     yaml_config = load_from_yaml()
