@@ -78,13 +78,14 @@ def load_from_yaml() -> Any:
 
 
 def db_link(
+        db: str,
         user: str,
         password: str,
         database: str,
         server: str,
         port: int,
 ) -> str:
-    link = f"postgresql://{user}:{password}@{server}:{port}/{database}"
+    link = f"{db}://{user}:{password}@{server}:{port}/{database}"
     return link
 
 

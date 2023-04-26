@@ -14,11 +14,9 @@ from schemas.responses import (PetsDeleteListResponce, PetsDeleteResponse,
                                PetsGetResponse, PetsPostResponse)
 
 
-def get_engine() -> None:
-    database = Database()
-    engine = database.connect()
-    session = database.session_local(engine=engine)
-    return database.get()
+database = Database()
+engine = database.connect()
+
 
 
 router = APIRouter()
@@ -44,7 +42,6 @@ def check_pet_type(type: PetsTypeModel) -> bool:
 )
 async def pet_create(
         pet: PetsPostResponse,
-        db: Session = Depends(),
 ) -> JSONResponse:
     """/pets POST Pet Create func
 
@@ -88,16 +85,10 @@ async def pet_create(
             status_code=HTTP_404_NOT_FOUND,
             detail="Type doesn't exists",
         )
-    _session = Database().session_local
-    _pet = PetCrud(database=...)
-    
-    return {
-        "id": id,
-        "name": ...,
-        "age": ...,
-        "type": type,
-        "created_at": created_at
-    }
+    db = Depends(database.get())
+    _pet = PetCrud(database=db)
+    create: PetsPostResponse = _pet.create(pet=pet)
+    return create
 
 
 @router.get(

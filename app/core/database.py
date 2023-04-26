@@ -10,7 +10,8 @@ from config.settings import DatabaseConnectionSettings, db_link, get_settings
 class Database:
     def __init__(self) -> None:
         conf = get_settings().db_connection
-        self.database_url = db_link(user=conf.postgres_user,
+        self.database_url = db_link(db="postgresql+psycopg2",
+                                    user=conf.postgres_user,
                                     password=conf.postgres_password,
                                     database=conf.postgres_database,
                                     server=conf.postgres_server,
@@ -19,7 +20,7 @@ class Database:
         self.metadata = MetaData()
 
     def connect(self) -> Engine:
-        return create_engine(self.database_url)
+        return create_engine(self.database_url, pool_pre_ping=True)
 
     def session_local(self, engine: Engine) -> sessionmaker:
         return sessionmaker(autocommit=False, autoflush=False, bind=engine)
