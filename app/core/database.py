@@ -16,7 +16,7 @@ class Database:
                                     database=conf.postgres_database,
                                     server=conf.postgres_server,
                                     port=conf.postgres_port)
-        self.database = Databases(self.database_url)
+        self.database = Databases("postgresql://localhost:5432")
         self.metadata = MetaData()
 
     def connect(self) -> Engine:
