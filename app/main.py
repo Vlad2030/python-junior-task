@@ -1,7 +1,6 @@
 import uvicorn
-from loguru import logger
-
 from config.settings import get_settings
+from loguru import logger
 
 
 def main() -> None:

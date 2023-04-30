@@ -2,8 +2,10 @@ version: '3.8'
 
 services:
   backend:
+    container_name: backend-app
     build: ./app
     command: python ./main.py
+    restart: always
     ports:
       - 3000:3000
     depends_on:
@@ -11,12 +13,12 @@ services:
 
 
   database:
+    container_name: postgres-db
     image: postgres
     restart: always
     environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_SERVER=localhost
-      - POSTGRES_DB=pets
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: pets
     ports:
       - 5432:5432

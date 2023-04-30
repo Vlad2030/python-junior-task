@@ -1,31 +1,30 @@
+from config.settings import DatabaseConnectionSettings, db_link, get_settings
 from databases import Database as Databases
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.engine import Engine
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
 from sqlalchemy.orm import sessionmaker
-
-from config.settings import DatabaseConnectionSettings, db_link, get_settings
 
 
 class Database:
     def __init__(self) -> None:
         conf = get_settings().db_connection
-        self.database_url = db_link(db="postgresql+psycopg2",
+        self.database_url = db_link(db="postgresql",
                                     user=conf.postgres_user,
                                     password=conf.postgres_password,
                                     database=conf.postgres_database,
-                                    server=conf.postgres_server,
                                     port=conf.postgres_port)
-        self.database = Databases("postgresql://localhost:5432")
+        self.database = Databases(self.database_url)
         self.metadata = MetaData()
+        #self.connect: Engine = create_engine(self.database_url)
 
     def connect(self) -> Engine:
-        return create_engine(self.database_url, pool_pre_ping=True)
+        yield create_engine(self.database_url)
 
     def session_local(self, engine: Engine) -> sessionmaker:
         return sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-    def db_base(self) -> None:
+    def base(self) -> DeclarativeMeta:
         return declarative_base()
 
     def get(self) -> None:
@@ -40,3 +39,8 @@ class Database:
 
     def drop_all(self, engine: Engine) -> None:
         return self.metadata.drop_all(engine)
+
+
+database = Database()
+Base = database.base()
+engine = database.connect()

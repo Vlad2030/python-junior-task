@@ -1,12 +1,11 @@
-from fastapi import FastAPI, Response
-from loguru import logger
-from starlette import status
-
 from config.settings import get_settings
 from core.logger import setup_logger
 from core.middleware.cors import setup_cors_middleware
+from fastapi import FastAPI, Response
+from loguru import logger
 from routers.api_routes import router
 from schemas.responses import HeathStatusCheckResponce
+from starlette import status
 
 
 def create_application() -> FastAPI:
@@ -20,7 +19,7 @@ def create_application() -> FastAPI:
     )
     application.debug = settings.api_config.debug
     setup_cors_middleware(app=application)
-    application.include_router(router)
+    application.include_router(router=router, tags=["pets"])
 
     @application.on_event("startup")
     async def startup() -> None:

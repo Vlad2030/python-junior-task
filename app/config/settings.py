@@ -82,8 +82,8 @@ def db_link(
         user: str,
         password: str,
         database: str,
-        server: str,
-        port: int,
+        server: str = "db",
+        port: str = 5432,
 ) -> str:
     link = f"{db}://{user}:{password}@{server}:{port}/{database}"
     return link
