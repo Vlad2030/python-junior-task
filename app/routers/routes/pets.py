@@ -157,7 +157,6 @@ async def pets_delete(ids: PetsIds) -> JSONResponse:
     deleted: int = 0
     errors: list = []
 
-    print(ids, type(ids))
     for id in ids:
         pet = crud.get_one_by_id(id=id)
 
