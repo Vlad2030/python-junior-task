@@ -1,11 +1,11 @@
 from core.crud import Pet as PetCrud
 from core.database import Database
-from fastapi import APIRouter
+from database.models import PetsDatabase
+from fastapi import APIRouter, Depends
 from schemas.models import PetsTypeModel
 from schemas.requests import PetsIds, PetsType
-from schemas.responses import (PetsDeleteListResponce, PetsDeleteResponse,
-                               PetsGetResponse, PetsPostResponse)
-from sqlalchemy.orm import Session
+from schemas.responses import (PetsDeleteResponse, PetsGetResponse, PetsPost,
+                               PetsPostResponse)
 from starlette.exceptions import HTTPException
 from starlette.responses import JSONResponse
 from starlette.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_404_NOT_FOUND
@@ -31,9 +31,7 @@ def check_pet_type(type: PetsTypeModel) -> bool:
     description="Creating a pet ¯\_(ツ)_/¯",
     response_model=PetsPostResponse,
 )
-async def pet_create(
-        pet: PetsPostResponse,
-) -> JSONResponse:
+async def pet_create(pet: PetsPost) -> JSONResponse:
     """/pets POST Pet Create func
 
     Args:
@@ -76,9 +74,9 @@ async def pet_create(
             detail="Pet type doesn't exists.",
         )
 
-    db = Database().get()
-    connect = PetCrud(database=db)
-    response: PetsPostResponse = connect.create(pet=pet)
+    db = Database().session_local
+    crud = PetCrud(database=db)
+    response: PetsPostResponse = crud.create(pet=pet)
     return {
         "id": response.id,
         "name": response.name,
@@ -118,12 +116,12 @@ async def pets_list(limit: int = 20) -> JSONResponse:
             ]
         }
     """
-    db = Database().get()
-    connect = PetCrud(database=db)
-    response: PetsGetResponse = connect.get_all(pet_limit=limit)
+    db = Database().session_local
+    crud = PetCrud(database=db)
+    response: list[PetsPostResponse] = crud.get_all(pet_limit=limit)
     return {
-        "count": response.count,
-        "items": response.items,
+        "count": len(response),
+        "items": response,
     }
 
 
@@ -153,18 +151,34 @@ async def pets_delete(ids: PetsIds) -> JSONResponse:
             ]
         }
     """
-    ...
-    db = Database().get()
-    connect = PetCrud(database=db)
-    response: PetsDeleteResponse = connect.delete(ids=ids)
+    db = Database().session_local
+    crud = PetCrud(database=db)
+    
+    deleted: int = 0
+    errors: list = []
 
-    if not response.deleted:
+    print(ids, type(ids))
+    for id in ids:
+        pet = crud.get_one_by_id(id=id)
+
+        if not pet:
+            errors.append({
+                    "id": id,
+                    "error": "Pet with the matching ID was not found.",
+                },
+            )
+            continue
+
+        crud.delete(pet_id=id)
+        deleted +=1
+
+    if deleted < 1:
         raise HTTPException(
             status_code=HTTP_404_NOT_FOUND,
             detail="No pets were deleted.",
         )
 
     return {
-        "deleted": response.deleted,
-        "errors": response.errors,
+        "deleted": deleted,
+        "errors": None if not errors else errors,
     }

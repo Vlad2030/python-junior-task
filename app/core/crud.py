@@ -1,6 +1,5 @@
-from database.models import Pets
-from schemas.responses import (PetsDeleteResponse, PetsGetResponse,
-                               PetsPostResponse)
+from database.models import PetsDatabase
+from schemas.responses import PetsGetResponse, PetsPostResponse
 from sqlalchemy.orm import Session
 
 
@@ -8,35 +7,21 @@ class Pet:
     def __init__(self, database: Session) -> None:
         self.database: Session = database
 
-
     def create(self, pet: PetsPostResponse) -> dict:
-        database_pet = Pets(**pet.dict())
+        database_pet = PetsDatabase(**pet.dict())
         self.database.add(database_pet)
         self.database.commit()
         self.database.refresh(database_pet)
         return database_pet
 
+    def get_all(self, pet_limit: int) -> PetsGetResponse:
+        return self.database.query(PetsDatabase).limit(pet_limit).all()
 
-    def get_all(self, pet_limit: int) -> list:
-        return self.database.query(Pets).limit(pet_limit).all()
+    def get_one_by_id(self, id: int) -> None:
+        return self.database.query(PetsDatabase).filter_by(id=id).one()
 
-
-    def delete(self, ids: list) -> dict:
-        deleted = 0
-        errors = []
-
-        for id in ids:
-            pet = self.database.query(Pets).filter(PetsPostResponse.id==id).first()
-
-            if not pet:
-                return errors.append({
-                        "id": id,
-                        "error": "Pet with the matching ID was not found.",
-                    },
-                )
-
-            self.database.delete(pet)
-            deleted += 1
-
+    def delete_by_id(self, pet_id: int) -> None:
+        pet = self.database.query(PetsDatabase).filter(PetsDatabase.id==pet_id).first()
+        self.database.delete(pet)
         self.database.commit()
-        return deleted, errors
+        return pet

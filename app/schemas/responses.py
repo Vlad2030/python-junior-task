@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Dict
 
 from pydantic import BaseModel
 
@@ -14,13 +14,10 @@ class PetsPostResponse(PetsPost):
     id: int
     created_at: datetime
 
-    class Config:
-        orm_mode = True
-
 
 class PetsGetResponse(BaseModel):
     count: int 
-    items: List[PetsPostResponse]
+    items: list
 
 
 class PetsGetListResponse(BaseModel):
@@ -34,7 +31,7 @@ class PetsDeleteListResponce(BaseModel):
 
 class PetsDeleteResponse(BaseModel):
     deleted: int
-    errors: List[PetsDeleteListResponce]
+    errors: list
 
 
 class HeathStatusCheckResponce(BaseModel):
