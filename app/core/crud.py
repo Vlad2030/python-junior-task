@@ -3,7 +3,7 @@ from schemas.responses import PetsGetResponse, PetsPostResponse
 from sqlalchemy.orm import Session
 
 
-class Pet:
+class CRUDPet:
     def __init__(self, database: Session) -> None:
         self.database: Session = database
 

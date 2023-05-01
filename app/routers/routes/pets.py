@@ -1,11 +1,11 @@
-from core.crud import Pet as PetCrud
+from core.crud import CRUDPet
 from core.database import Database
 from core.exceptions import (LIMIT_LESS_THAN_ZERO, PET_ID_NOT_FOUND,
                              PETS_NO_WERE_DELETED, PETS_TYPE_DOESNT_EXIST)
 from fastapi import APIRouter
 from schemas.models import PetsTypeModel
-from schemas.requests import PetsIds, PetsType
-from schemas.responses import (PetsDeleteResponse, PetsGetResponse, PetsPost,
+from schemas.requests import PetsDeleteRequest, PetsPostRequest
+from schemas.responses import (PetsDeleteResponse, PetsGetResponse,
                                PetsPostResponse)
 from starlette.exceptions import HTTPException
 from starlette.responses import JSONResponse
@@ -22,7 +22,7 @@ def check_pet_type(type: PetsTypeModel) -> bool:
 
     Else returns `False`.
     """
-    allowed_types: PetsType = ["dog", "cat"]
+    allowed_types = ["dog", "cat"]
     return True if type in allowed_types else False
 
 
@@ -33,7 +33,7 @@ def check_pet_type(type: PetsTypeModel) -> bool:
     description="Creating a pet ¯\_(ツ)_/¯",
     response_model=PetsPostResponse,
 )
-async def pet_create(pet: PetsPost) -> JSONResponse:
+async def pet_create(pet: PetsPostRequest) -> JSONResponse:
     """/pets POST Pet Create func
 
     Args:
@@ -73,11 +73,11 @@ async def pet_create(pet: PetsPost) -> JSONResponse:
     if not check_pet_type(type=pet.type):
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST,
-            detail=PETS_NO_WERE_DELETED,
+            detail=PETS_TYPE_DOESNT_EXIST,
         )
 
     db = Database().session_local
-    crud = PetCrud(database=db)
+    crud = CRUDPet(database=db)
     response: PetsPostResponse = crud.create(pet=pet)
     return {
         "id": response.id,
@@ -125,7 +125,7 @@ async def pets_list(limit: int = 20) -> JSONResponse:
         )
 
     db = Database().session_local
-    crud = PetCrud(database=db)
+    crud = CRUDPet(database=db)
     response: list[PetsPostResponse] = crud.get_all(pet_limit=limit)
     return {
         "count": len(response),
@@ -140,7 +140,7 @@ async def pets_list(limit: int = 20) -> JSONResponse:
     description="Deleting pets by ID ( •_•)",
     response_model=PetsDeleteResponse
 )
-async def pets_delete(ids: PetsIds) -> JSONResponse:
+async def pets_delete(ids: PetsDeleteRequest) -> JSONResponse:
     """ /pets DELETE pets by id
 
     Args:
@@ -160,7 +160,7 @@ async def pets_delete(ids: PetsIds) -> JSONResponse:
         }
     """
     db = Database().session_local
-    crud = PetCrud(database=db)
+    crud = CRUDPet(database=db)
     
     deleted: int = 0
     errors: list = []

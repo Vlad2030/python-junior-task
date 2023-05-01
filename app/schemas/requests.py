@@ -1,40 +1,17 @@
-from typing import List, Union
+from typing import List
 
 from pydantic import BaseModel
 
 
-class PetsName(BaseModel):
-    name: str
-
-
-class PetsAge(BaseModel):
-    age: int
-
-
-class AllowedPetsTypes(BaseModel):
-    cat: str = "cat"
-    dog: str = "dog"
-
-
-class PetsType(BaseModel):
-    type: str
-
-
-class PetsLimit(BaseModel):
-    limit: List[int]
-
-
-class PetsIds(BaseModel):
-    ids: List[int]
-
-
 class PetsPostRequest(BaseModel):
-    ...
+    name: str = "boy"
+    age: int = 7
+    type: str = "dog"
 
 
 class PetsGetRequest(BaseModel):
-    ...
+    limit: int = 20
 
 
 class PetsDeleteRequest(BaseModel):
-    ...
+    ids: List[int] = [1, 2, 3]
