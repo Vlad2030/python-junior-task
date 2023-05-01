@@ -1,7 +1,7 @@
 from core.crud import Pet as PetCrud
 from core.database import Database
-from core.exceptions import (HTTP_200_OK, HTTP_201_CREATED, PETS_ID_NOT_FOUND,
-                             PetsNullDeleteException, PetsTypeException)
+from core.exceptions import (LIMIT_LESS_THAN_ZERO, PET_ID_NOT_FOUND,
+                             PETS_NO_WERE_DELETED, PETS_TYPE_DOESNT_EXIST)
 from fastapi import APIRouter
 from schemas.models import PetsTypeModel
 from schemas.requests import PetsIds, PetsType
@@ -9,6 +9,8 @@ from schemas.responses import (PetsDeleteResponse, PetsGetResponse, PetsPost,
                                PetsPostResponse)
 from starlette.exceptions import HTTPException
 from starlette.responses import JSONResponse
+from starlette.status import (HTTP_200_OK, HTTP_201_CREATED,
+                              HTTP_400_BAD_REQUEST)
 
 router = APIRouter()
 
@@ -69,7 +71,10 @@ async def pet_create(pet: PetsPost) -> JSONResponse:
         }
     """
     if not check_pet_type(type=pet.type):
-        raise PetsTypeException
+        raise HTTPException(
+            status_code=HTTP_400_BAD_REQUEST,
+            detail=PETS_NO_WERE_DELETED,
+        )
 
     db = Database().session_local
     crud = PetCrud(database=db)
@@ -113,6 +118,12 @@ async def pets_list(limit: int = 20) -> JSONResponse:
             ]
         }
     """
+    if limit < 0:
+        raise HTTPException(
+            status_code=HTTP_400_BAD_REQUEST,
+            detail=LIMIT_LESS_THAN_ZERO,
+        )
+
     db = Database().session_local
     crud = PetCrud(database=db)
     response: list[PetsPostResponse] = crud.get_all(pet_limit=limit)
@@ -160,16 +171,18 @@ async def pets_delete(ids: PetsIds) -> JSONResponse:
         if not pet:
             errors.append({
                     "id": id,
-                    "error": PETS_ID_NOT_FOUND,
+                    "error": PET_ID_NOT_FOUND,
                 },
             )
-            continue
 
-        crud.delete(pet_id=id)
+        crud.delete_by_id(pet_id=id)
         deleted +=1
 
-    if deleted < 1:
-        raise PetsNullDeleteException
+    if deleted == 0:
+        raise HTTPException(
+            status_code=HTTP_200_OK,
+            detail=PETS_NO_WERE_DELETED,
+        )
 
     return {
         "deleted": deleted,
