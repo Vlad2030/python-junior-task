@@ -1,14 +1,14 @@
 from core.crud import Pet as PetCrud
 from core.database import Database
-from database.models import PetsDatabase
-from fastapi import APIRouter, Depends
+from core.exceptions import (HTTP_200_OK, HTTP_201_CREATED, PETS_ID_NOT_FOUND,
+                             PetsNullDeleteException, PetsTypeException)
+from fastapi import APIRouter
 from schemas.models import PetsTypeModel
 from schemas.requests import PetsIds, PetsType
 from schemas.responses import (PetsDeleteResponse, PetsGetResponse, PetsPost,
                                PetsPostResponse)
 from starlette.exceptions import HTTPException
 from starlette.responses import JSONResponse
-from starlette.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_404_NOT_FOUND
 
 router = APIRouter()
 
@@ -20,7 +20,7 @@ def check_pet_type(type: PetsTypeModel) -> bool:
 
     Else returns `False`.
     """
-    allowed_types: PetsType = ["dog", "cat"]# PetsTypeModel.type_list
+    allowed_types: PetsType = ["dog", "cat"]
     return True if type in allowed_types else False
 
 
@@ -69,10 +69,7 @@ async def pet_create(pet: PetsPost) -> JSONResponse:
         }
     """
     if not check_pet_type(type=pet.type):
-        raise HTTPException(
-            status_code=HTTP_404_NOT_FOUND,
-            detail="Pet type doesn't exists.",
-        )
+        raise PetsTypeException
 
     db = Database().session_local
     crud = PetCrud(database=db)
@@ -163,7 +160,7 @@ async def pets_delete(ids: PetsIds) -> JSONResponse:
         if not pet:
             errors.append({
                     "id": id,
-                    "error": "Pet with the matching ID was not found.",
+                    "error": PETS_ID_NOT_FOUND,
                 },
             )
             continue
@@ -172,10 +169,7 @@ async def pets_delete(ids: PetsIds) -> JSONResponse:
         deleted +=1
 
     if deleted < 1:
-        raise HTTPException(
-            status_code=HTTP_404_NOT_FOUND,
-            detail="No pets were deleted.",
-        )
+        raise PetsNullDeleteException
 
     return {
         "deleted": deleted,
