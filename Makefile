@@ -71,3 +71,7 @@ migrations_logs:
 .PHONY: exec
 exec:
 	$(compose_application) exec $(container) /bin/bash
+
+.PHONY: pycache
+pycache:
+	find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf

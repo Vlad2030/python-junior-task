@@ -58,7 +58,8 @@ class Randomizer:
     def limit(self) -> int:
         return random.randint(1, 1000)
 
-    def ids(self) -> list[int]:
-        ...
+    def ids(self, amount: int) -> list[int]:
+        ids: list = []
+        return [ids.append(id) for id in amount]
 
 
