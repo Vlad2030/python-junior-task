@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List
 
 from pydantic import BaseModel
 
@@ -14,7 +13,7 @@ class PetsPostResponse(BaseModel):
 
 class PetsGetResponse(BaseModel):
     count: int = 2
-    items: List[PetsPostResponse]
+    items: list
 
 
 class PetsDeleteListResponce(BaseModel):
@@ -24,7 +23,7 @@ class PetsDeleteListResponce(BaseModel):
 
 class PetsDeleteResponse(BaseModel):
     deleted: int = 2
-    errors: List[PetsDeleteListResponce]
+    errors: list | None
 
 
 class HeathStatusCheckResponce(BaseModel):

@@ -1,4 +1,4 @@
-from config.settings import DatabaseConnectionSettings, db_link, get_settings
+from config.settings import db_link, get_settings
 from databases import Database as Databases
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.engine import Engine
@@ -18,11 +18,13 @@ class Database:
         self.database = Databases(self.database_url)
         self.metadata = MetaData()
         self.engine: Engine = create_engine(self.database_url)
-        self.session_local: sessionmaker = scoped_session(sessionmaker(
-            autocommit=False,
-            autoflush=False,
-            bind=self.engine,
-        ))
+        self.session_local: sessionmaker = scoped_session(
+            session_factory=sessionmaker(
+                autocommit=False,
+                autoflush=False,
+                bind=self.engine,
+            )
+        )
 
     def base(self) -> DeclarativeMeta:
         return declarative_base()

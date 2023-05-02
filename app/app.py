@@ -1,5 +1,4 @@
 from config.settings import get_settings
-from core.logger import setup_logger
 from core.middleware.cors import setup_cors_middleware
 from fastapi import FastAPI, Response
 from loguru import logger

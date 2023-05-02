@@ -1,7 +1,7 @@
 from core.crud import CRUDPet
 from core.database import Database
-from core.exceptions import (LIMIT_LESS_THAN_ZERO, PET_ID_NOT_FOUND,
-                             PETS_NO_WERE_DELETED, PETS_TYPE_DOESNT_EXIST)
+from core.exceptions import (LIMIT_LESS_THAN_ZERO, PETS_NO_WERE_DELETED,
+                             PETS_TYPE_DOESNT_EXIST)
 from fastapi import APIRouter
 from schemas.models import PetsTypeModel
 from schemas.requests import PetsDeleteRequest, PetsPostRequest
@@ -126,10 +126,10 @@ async def pets_list(limit: int = 20) -> JSONResponse:
 
     db = Database().session_local
     crud = CRUDPet(database=db)
-    response: list[PetsPostResponse] = crud.get_all(pet_limit=limit)
+    items = crud.get_all(pet_limit=limit)
     return {
-        "count": len(response),
-        "items": response,
+        "count": len(items),
+        "items": items,
     }
 
 
@@ -161,24 +161,8 @@ async def pets_delete(ids: PetsDeleteRequest) -> JSONResponse:
     """
     db = Database().session_local
     crud = CRUDPet(database=db)
-    
-    deleted: int = 0
-    errors: list = []
-
-    for id in ids:
-        pet = crud.get_one_by_id(id=id)
-
-        if not pet:
-            errors.append({
-                    "id": id,
-                    "error": PET_ID_NOT_FOUND,
-                },
-            )
-
-        crud.delete_by_id(pet_id=id)
-        deleted +=1
-
-    if deleted == 0:
+    deleted, errors = crud.delete(pet=ids)
+    if not deleted:
         raise HTTPException(
             status_code=HTTP_200_OK,
             detail=PETS_NO_WERE_DELETED,
