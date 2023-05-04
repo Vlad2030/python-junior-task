@@ -1,7 +1,7 @@
+from core.constants import (LIMIT_LESS_THAN_ZERO, PETS_NO_WERE_DELETED,
+                            PETS_TYPE_DOESNT_EXIST)
 from core.crud import CRUDPet
 from core.database import Database
-from core.exceptions import (LIMIT_LESS_THAN_ZERO, PETS_NO_WERE_DELETED,
-                             PETS_TYPE_DOESNT_EXIST)
 from fastapi import APIRouter
 from schemas.models import PetsTypeModel
 from schemas.requests import PetsDeleteRequest, PetsPostRequest

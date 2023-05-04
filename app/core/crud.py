@@ -1,4 +1,4 @@
-from core.exceptions import PET_ID_NOT_FOUND
+from core.constants import PET_ID_NOT_FOUND
 from database.models import PetsDatabase
 from schemas.responses import (PetsDeleteResponse, PetsGetResponse,
                                PetsPostResponse)
