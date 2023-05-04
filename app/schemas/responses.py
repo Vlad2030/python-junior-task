@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from typing import Union
 from pydantic import BaseModel
 
 
@@ -23,7 +23,7 @@ class PetsDeleteListResponce(BaseModel):
 
 class PetsDeleteResponse(BaseModel):
     deleted: int = 2
-    errors: list | None
+    errors: Union[list, None]
 
 
 class HeathStatusCheckResponce(BaseModel):

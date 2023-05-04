@@ -33,7 +33,7 @@ def check_pet_type(type: PetsTypeModel) -> bool:
     description="Creating a pet ¯\_(ツ)_/¯",
     response_model=PetsPostResponse,
 )
-async def pet_create(pet: PetsPostRequest) -> JSONResponse:
+def pet_create(pet: PetsPostRequest) -> JSONResponse:
     """/pets POST Pet Create func
 
     Args:
@@ -79,13 +79,7 @@ async def pet_create(pet: PetsPostRequest) -> JSONResponse:
     db = Database().session_local
     crud = CRUDPet(database=db)
     response: PetsPostResponse = crud.create(pet=pet)
-    return {
-        "id": response.id,
-        "name": response.name,
-        "age": response.age,
-        "type": response.type,
-        "created_at": response.created_at,
-    }
+    return response
 
 
 @router.get(
@@ -95,7 +89,7 @@ async def pet_create(pet: PetsPostRequest) -> JSONResponse:
     description="Gettings all pets ( ͡° ͜ʖ ͡° )",
     response_model=PetsGetResponse
 )
-async def pets_list(limit: int = 20) -> JSONResponse:
+def pets_list(limit: int = 20) -> JSONResponse:
     """/pets GET all pets list
 
     Args:
